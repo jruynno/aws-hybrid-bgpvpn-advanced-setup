@@ -98,14 +98,15 @@ Click `Download`
 Rename this file to `CONNECTION2CONFIG.TXT`
 
 ### 2. POPULATE DEMO VALUE TEMPLATE WITH ALL CONFIG VALUES
-    * There is a document in this folder called `DemoValueTemplate.md` - it contains instructions on how to extract all of the configuration variables you will need
-    You will extract these from three locations
+There is a document in this folder called `DemoValueTemplate.md` - it contains instructions on how to extract all of the configuration variables you will need
+
+You will extract these from three locations
 
         * Outputs of the ONPREM CFN Stack
         * For Connection1, CONNECTION1CONFIG.TXT
         * For Connection2, CONNECTION2CONFIG.TXT
 
-    Go ahead and populate that template using the instructions in the template
+Go ahead and populate that template using the instructions in the template
 
 ## Stage 3 -  IPSEC TUNNEL CONFIG
 ### 1. Move to EC2 console
@@ -115,9 +116,11 @@ Rename this file to `CONNECTION2CONFIG.TXT`
 * Select `Session Manager`
 * Click `Connect`
     * Type the following:
-        * `sudo bash`
-        * `cd /home/ubuntu/demo_assets/`
-        * `nano ipsec.conf`
+        ```
+        sudo bash
+        cd /home/ubuntu/demo_assets/
+        nano ipsec.conf
+        ```
 
  
    *This is is the file which configures the IPSEC Tunnel interfaces over which our VPN traffic flows.*
@@ -127,18 +130,21 @@ Rename this file to `CONNECTION2CONFIG.TXT`
 * Replace the following placeholders with the real values in the `DemoValueTemplate.md` document
 
 
-    1. `ROUTER1_PRIVATE_IP`
-    2. `CONN1_TUNNEL1_ONPREM_OUTSIDE_IP`
-    3. `CONN1_TUNNEL1_AWS_OUTSIDE_IP`
-    4. `CONN1_TUNNEL1_AWS_OUTSIDE_IP`
-    and
-    5. `ROUTER1_PRIVATE_IP`
-    6. `CONN1_TUNNEL2_ONPREM_OUTSIDE_IP`
-    7. `CONN1_TUNNEL2_AWS_OUTSIDE_IP`
-    8. `CONN1_TUNNEL2_AWS_OUTSIDE_IP`
-    ![alt text](image-10.png)
-    * `ctrl+o` to save, and `ctrl+x` to exit
+        ROUTER1_PRIVATE_IP
+        CONN1_TUNNEL1_ONPREM_OUTSIDE_IP
+        CONN1_TUNNEL1_AWS_OUTSIDE_IP
+        CONN1_TUNNEL1_AWS_OUTSIDE_IP
+        and
+        ROUTER1_PRIVATE_IP
+        CONN1_TUNNEL2_ONPREM_OUTSIDE_IP
+        CONN1_TUNNEL2_AWS_OUTSIDE_IP
+        CONN1_TUNNEL2_AWS_OUTSIDE_IP
+        
+        ctrl+o to save, and ctrl+x to exit
 
+    ![alt text](image-10.png)
+
+----
 
 * type `nano ipsec.secrets`
     
@@ -146,33 +152,37 @@ Rename this file to `CONNECTION2CONFIG.TXT`
 
     Replace the following placeholders with the real values in the `DemoValueTemplate.md` document
 
-    1. `CONN1_TUNNEL1_ONPREM_OUTSIDE_IP`
-    2. `CONN1_TUNNEL1_AWS_OUTSIDE_IP`
-    3. `CONN1_TUNNEL1_PresharedKey`
-    and
-    4. `CONN1_TUNNEL2_ONPREM_OUTSIDE_IP`
-    5. `CONN1_TUNNEL2_AWS_OUTSIDE_IP`
-    6. `CONN1_TUNNEL2_PresharedKey`
-    ![alt text](image-11.png)
+        CONN1_TUNNEL1_ONPREM_OUTSIDE_IP
+        CONN1_TUNNEL1_AWS_OUTSIDE_IP
+        CONN1_TUNNEL1_PresharedKey
+        and
+        CONN1_TUNNEL2_ONPREM_OUTSIDE_IP
+        CONN1_TUNNEL2_AWS_OUTSIDE_IP
+        CONN1_TUNNEL2_PresharedKey
+        
+        Ctrl+o to save, and Ctrl+x to exit
+   
+ ![alt text](image-11.png)
 
-    * `Ctrl+o` to save, and `Ctrl+x` to exit
+----
 
-* type `nano ipsec-vti.sh`
+* Type `nano ipsec-vti.sh`
+
     *This script brings UP the IPSEC tunnel interfaces when needed*
     
     Replace the following placeholders with the real values in the `DemoValueTemplate.md` document
     
-        `CONN1_TUNNEL1_ONPREM_INSIDE_IP` (ensuring the /30 is at the end)
-        `CONN1_TUNNEL1_AWS_INSIDE_IP` (ensuring the /30 is at the end)
-        `CONN1_TUNNEL2_ONPREM_INSIDE_IP` (ensuring the /30 is at the end)
-        `CONN1_TUNNEL2_AWS_INSIDE_IP` (ensuring the /30 is at the end)
+        CONN1_TUNNEL1_ONPREM_INSIDE_IP (ensuring the /30 is at the end)
+        CONN1_TUNNEL1_AWS_INSIDE_IP (ensuring the /30 is at the end)
+        CONN1_TUNNEL2_ONPREM_INSIDE_IP (ensuring the /30 is at the end)
+        CONN1_TUNNEL2_AWS_INSIDE_IP (ensuring the /30 is at the end)
+        
+        Ctrl+o to save, and Ctrl+x to exit
+----
+    cp ipsec* /etc
+    chmod +x /etc/ipsec-vti.sh
 
-    * `Ctrl+o` to save, and `Ctrl+x` to exit
-
-* `cp ipsec* /etc`
-* `chmod +x /etc/ipsec-vti.sh`
-
-Now all the configuration for Router1 IPSEC has been completed, lets restart the strongSwan service to bring them up.
+ Now all the configuration for Router1 IPSEC has been completed, lets restart the strongSwan service to bring them up.
 
 * Type `systemctl restart strongswan` to restart strongSwan ... this should bring up the tunnels
 
@@ -181,24 +191,29 @@ Now all the configuration for Router1 IPSEC has been completed, lets restart the
 * You should see `vti1` and `vti2` interfaces
 ![alt text](image-12.png)
 * You can also check the connection in the AWS VPC Console ...the tunnels should be down, but IPSEC should be shown as UP after a few minutes.
+![alt text](image-16.png)
 
 ### 2. CONFIGURE IPSEC TUNNELS FOR ONPREMISES-ROUTER2
-Move to EC2 Console
-https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=instanceState
-Click Instances on the left menu
-Locate and select ONPREM-ROUTER2
-Right Click => Connect
-Select Session Manager
-Click Connect
+* Move to `EC2 Console`
+* Click `Instances` on the hamburger menu
+* Locate and select `ONPREM-ROUTER2`
+* Right Click, select `Connect`
+![alt text](image-13.png)
+* Select `Session Manager`
+* Click `Connect`
+* Type the followingn:
+    ```
+    sudo bash
+    cd /home/ubuntu/demo_assets/
+    nano ipsec.conf
+    ```
 
-sudo bash
-cd /home/ubuntu/demo_assets/
-nano ipsec.conf
+*This is is the file which configures the IPSEC Tunnel interfaces over which our VPN traffic flows.*
 
-This is is the file which configures the IPSEC Tunnel interfaces over which our VPN traffic flows.
 As we are connected to Router 2 - This configures the ones for ROUTER2 -> BOTH AWS Endpoints
-Replace the following placeholders with the real values in the DemoValueTemplate.md document
 
+* Replace the following placeholders with the real values in the `DemoValueTemplate.md` document
+    ```
     ROUTER2_PRIVATE_IP
     CONN2_TUNNEL1_ONPREM_OUTSIDE_IP
     CONN2_TUNNEL1_AWS_OUTSIDE_IP
@@ -208,40 +223,43 @@ Replace the following placeholders with the real values in the DemoValueTemplate
     CONN2_TUNNEL2_ONPREM_OUTSIDE_IP
     CONN2_TUNNEL2_AWS_OUTSIDE_IP
     CONN2_TUNNEL2_AWS_OUTSIDE_IP
+    
 
-ctrl+o to save and ctrl+x to exit
+    ctrl+o to save and ctrl+x to exit
+    ```
+![alt text](image-14.png)
+----
+* Type `nano ipsec.secrets`
 
-nano ipsec.secrets
+*This file controls authentication for the tunnels*
+* Replace the following placeholders with the real values in the DemoValueTemplate.md document
 
-This file controls authentication for the tunnels
-Replace the following placeholders with the real values in the DemoValueTemplate.md document
+        CONN2_TUNNEL1_ONPREM_OUTSIDE_IP
+        CONN2_TUNNEL1_AWS_OUTSIDE_IP
+        CONN2_TUNNEL1_PresharedKey
+        and
+        CONN2_TUNNEL2_ONPREM_OUTSIDE_IP
+        CONN2_TUNNEL2_AWS_OUTSIDE_IP
+        CONN2_TUNNEL2_PresharedKey
 
-    CONN2_TUNNEL1_ONPREM_OUTSIDE_IP
-    CONN2_TUNNEL1_AWS_OUTSIDE_IP
-    CONN2_TUNNEL1_PresharedKey
-    and
-    CONN2_TUNNEL2_ONPREM_OUTSIDE_IP
-    CONN2_TUNNEL2_AWS_OUTSIDE_IP
-    CONN2_TUNNEL2_PresharedKey
+        Ctrl+o to save, and Ctrl+x to exit
 
-Ctrl+o to save
-Ctrl+x to exit
+----
+* Type `nano ipsec-vti.sh`
 
-nano ipsec-vti.sh
+*This script brings UP the tunnel interfaces when needed*
 
-This script brings UP the tunnel interfaces when needed
 Replace the following placeholders with the real values in the DemoValueTemplate.md document
 
     CONN2_TUNNEL1_ONPREM_INSIDE_IP (ensuring the /30 is at the end)
     CONN2_TUNNEL1_AWS_INSIDE_IP (ensuring the /30 is at the end)
     CONN2_TUNNEL2_ONPREM_INSIDE_IP (ensuring the /30 is at the end)
     CONN2_TUNNEL2_AWS_INSIDE_IP (ensuring the /30 is at the end)
-
-Ctrl+o to save
-Ctrl+x to exit
-
-cp ipsec* /etc
-chmod +x /etc/ipsec-vti.sh
+    
+    Ctrl+o to save, and Ctrl+x to exit
+----
+    cp ipsec* /etc
+    chmod +x /etc/ipsec-vti.sh
 
 Now all the configuration for Router1 IPSEC has been completed, lets restart the strongSwan service to bring them up.
 
@@ -249,5 +267,104 @@ systemctl restart strongswan to restart strongSwan ... this should bring up the 
 
 We can check these tunnels are up by running
 ifconfig
-You should see vti1 and vti2 interfaces
+You should see `vti1` and `vti2` interfaces
+![alt text](image-15.png)
+
 You can also check the connection in the AWS VPC Console ...the tunnels should be down, but IPSEC should be shown as UP after a few minutes.
+
+
+
+## Stage 4 - BGP ROUTING AND TESTING
+### 1. INSTALL FRR ON ROUTER 1
+* Move to EC2 Console
+* Click `Instances` on the hamburger menu
+* Locate and select `ONPREM-ROUTER1`
+* Right Click, select `Connect`
+* Select `Session Manager`
+* Click `Connect`
+
+First we will make the FRR script executable and run it to install BGP capability.
+
+    sudo bash
+    cd /home/ubuntu/demo_assets
+    chmod +x ffrouting-install.sh
+    ./ffrouting-install.sh
+
+*This will take some time - 10-15 minutes**
+
+*We can allow this to run, and start the same process on the other Router*
+
+### 2. INSTALL FRR ON ROUTER 2
+* Move to EC2 Console
+* Click `Instances` on the hamburger menu
+* Locate and select `ONPREM-ROUTER1`
+* Right Click, select `Connect`
+* Select `Session Manager`
+* Click `Connect`
+
+First we will make the FRR script executable and run it to install BGP capability.
+
+    sudo bash
+    cd /home/ubuntu/demo_assets
+    chmod +x ffrouting-install.sh
+    ./ffrouting-install.sh
+
+
+### 3. CONFIGURE BGP ROUTING FOR ONPREMISES-ROUTER1 AND TEST
+Type the following
+
+    sudo bash
+    vtysh
+    conf t
+    frr defaults traditional
+    router bgp 65016
+    neighbor CONN1_TUNNEL1_AWS_BGP_IP remote-as 64512
+    neighbor CONN1_TUNNEL2_AWS_BGP_IP remote-as 64512
+    no bgp ebgp-requires-policy
+    address-family ipv4 unicast
+    redistribute connected
+    exit-address-family
+    exit
+    exit
+    wr
+    exit
+
+    sudo reboot
+
+ONPREM-ROUTER1 once back will now be functioning as both an IPSEC endpoint and a BGP endpoint. It will be exchanging routes with the transit gateway in AWS.
+![alt text](image-17.png)
+![alt text](image-18.png)
+
+![alt text](image-19.png)
+
+Locate and select ONPREM-ROUTER1
+Right Click => Connect
+Select Session Manager
+Click Connect
+sudo bash
+
+SHOW THE ROUTES VIA THE UI route
+SHOW THE ROUTES VIA vtysh
+show ip route.
+![alt text](image-20.png)
+
+TEST
+Move to EC2 Console
+https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=instanceState
+Click Instances on the left menu
+Locate and select ONPREM-SERVER1
+Right Click => Connect
+Select Session Manager
+Click Connect
+
+run ping IP_ADDRESS_OF_EC2-A
+
+Move to EC2 Console
+https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=instanceState
+Click Instances on the left menu
+Locate and select EC2-A
+Right Click => Connect
+Select Session Manager
+Click Connect
+
+run ping IP_ADDRESS_OF_ONPREM-SERVER1
