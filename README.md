@@ -1,5 +1,5 @@
 # Advanced Highly-Available Dynamic Site-to-Site VPN
-
+![alt text](Untitleddesign-ezgif.com-animated-gif-maker.gif)
 
 ## STAGE1 - AWS and ONPREM Setup
 ### 1. INITIAL SETUP OF AWS ENVIRONMENT AND SIMULATED ON-PREMISES ENVIRONMENT
