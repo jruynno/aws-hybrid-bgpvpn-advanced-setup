@@ -1,6 +1,10 @@
 # Advanced Highly-Available Dynamic Site-to-Site VPN
 ![alt text](Untitleddesign-ezgif.com-animated-gif-maker.gif)
 
+
+
+
+
 ## STAGE1 - AWS and ONPREM Setup
 ### 1. INITIAL SETUP OF AWS ENVIRONMENT AND SIMULATED ON-PREMISES ENVIRONMENT
     * Open 1 deployment setup: [CLICK THIS](https://learn-cantrill-labs.s3.amazonaws.com/aws-hybrid-bgpvpn/BGPVPNINFRA.yaml)
@@ -348,23 +352,64 @@ SHOW THE ROUTES VIA vtysh
 show ip route.
 ![alt text](image-20.png)
 
-TEST
-Move to EC2 Console
+### 4. TEST
+#### 1. Move to EC2 Console
 https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=instanceState
-Click Instances on the left menu
-Locate and select ONPREM-SERVER1
-Right Click => Connect
-Select Session Manager
-Click Connect
+* Click `Instances` on the left menu
+* Locate and select `ONPREM-SERVER1`
+* Right Click => `Connect`
+* Select `Session Manager`
+* Click `Connect`
 
-run ping IP_ADDRESS_OF_EC2-A
+* run `ping IP_ADDRESS_OF_EC2-A`
 
-Move to EC2 Console
+#### 2. Move to EC2 Console
 https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=instanceState
-Click Instances on the left menu
-Locate and select EC2-A
-Right Click => Connect
-Select Session Manager
-Click Connect
+* Click `Instances` on the left menu
+* Locate and `select EC2-A`
+* Right Click => `Connect`
+* Select `Session Manager`
+* Click `Connect`
 
-run ping IP_ADDRESS_OF_ONPREM-SERVER1
+* run `ping IP_ADDRESS_OF_ONPREM-SERVER1`
+
+## CLEANUP
+### 1. Move to VPC console
+* Click `Site-to-Site VPN connections`
+* Select each VPN
+* Click `Actions`
+* Select `Delete VPN connection`
+![alt text](image-21.png)
+* confirm deletion 
+
+</br>
+
+* Click `Customer gateways`
+* Select each gateway
+* Click `Actions`
+* Select `Delete customer gateway`
+![alt text](image-22.png)
+* Confirm deletion
+
+
+### 2. Go to CloudFormation
+* Select 1 click deployment stack, `ADVANCEDVPNDEMO`
+* Click `delete`
+
+
+## Conclusion
+CONGRATULATIONS!
+
+You've successfully completed a complex implementation of a Site-to-Site VPN between AWS and a simulated on-premise environment. This hands-on experience is invaluable and can be applied to real-world deployment scenarios. 
+
+Key components of your implementation include:
+
+* `Transit Gateway with VPN Attachments`
+
+* `VPN Accelerator`: Leveraging the Global AWS Network to transit traffic from customer routers to the Transit Gateway
+
+* `BGP` (Border Gateway Protocol): Dynamically exchanging routes between customer routers and the Transit Gateway
+
+* `True Dynamic Routing and High Availability`: Using four IPSec tunnels between customer routers and each of the four AWS side endpoints
+
+This achievement marks a significant milestone in your understanding and capability to manage hybrid cloud environments. 
