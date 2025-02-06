@@ -413,3 +413,8 @@ Key components of your implementation include:
 * `True Dynamic Routing and High Availability`: Using four IPSec tunnels between customer routers and each of the four AWS side endpoints
 
 This achievement marks a significant milestone in your understanding and capability to manage hybrid cloud environments. 
+
+
+Credits:
+
+*This project is based on the Solutions Architect Professional course by Adrian Cantrill. Their comprehensive guides and learning resources have been instrumental in the development of this application.*
