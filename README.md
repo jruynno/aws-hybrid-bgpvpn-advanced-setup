@@ -5,6 +5,7 @@
 
 
 
+
 ## STAGE1 - AWS and ONPREM Setup
 ### 1. INITIAL SETUP OF AWS ENVIRONMENT AND SIMULATED ON-PREMISES ENVIRONMENT
     * Open 1 deployment setup: [CLICK THIS](https://learn-cantrill-labs.s3.amazonaws.com/aws-hybrid-bgpvpn/BGPVPNINFRA.yaml)
@@ -18,7 +19,7 @@
 ### 2. CREATE CUSTOMER GATEWAY OBJECTS
 * For ON-PREM ROUTER 1
     * Open VPC console 
-    ![alt text](image.png)
+    ![alt text](Images/image.png)
     * On the humburger menu, Under `Virtual private network (VPN)`, Select `Customer Gateways` 
     * Click Create `Customer gateway`
     * Set Name to `ONPREM-ROUTER1`
@@ -26,7 +27,7 @@
     * Set IP Address to `Router1Public IP`
     * Click `Create Customer gateway`
 
-![alt text](image-1.png)
+![alt text](Images/image-1.png)
 
 * For ON-PREM ROUTER 2
     *  Click Create `Customer gateway`
@@ -35,16 +36,16 @@
     * Set IP Address to `Router2Public IP`
     * Click `Create Customer gateway`
 
-![alt text](image-2.png)
+![alt text](Images/image-2.png)
 
 
 ### 3. CONFIRM NO CONNECTIVITY
     * Move to EC2 Console
-    ![alt text](image-3.png)
+    ![alt text](Images/image-3.png)
     * Click `Instances` on the hamburger menu
     * Locate and select `ONPREM-SERVER2`
     * Right Click, click `Connect`
-    ![alt text](image-4.png)
+    ![alt text](Images/image-4.png)
     * Select `Session Manager`
     * Click `Connect`
     * Open Instance `AWS-EC2-B`, copy its `Private IPv4 addresses`
@@ -60,23 +61,23 @@
 * For ONPREM-ROUTER1
     * Click `Create Transit Gateway Attachment`
     * Click `Transit Gateway ID` dropdown and select `A4LTGW`
-    ![alt text](image-5.png)
+    ![alt text](Images/image-5.png)
     * Select `VPN` for attachment type
     * Select `Existing` for Customer gateway
     * Click `Customer gateway ID` dropdown and select `ONPREM-ROUTER1`
     * Click `Dynamic (requires BGP)` for Routing options
     * Click `Enable Acceleration`
     * Click `Create transit gateway attachment`
-![alt text](image-6.png)
+![alt text](Images/image-6.png)
 
 * For ONPREM-ROUTER2
     * Click `Create Transit Gateway Attachment`
     * Click `Transit Gateway ID` dropdown and select `A4LTGW`
-    ![alt text](image-5.png)
+    ![alt text](Images/image-5.png)
     * Select `VPN` for attachment type
     * Select `Existing` for Customer gateway
     * Click `Customer gateway ID` dropdown and select `ONPREM-ROUTER2`
-    ![alt text](image-7.png)
+    ![alt text](Images/image-7.png)
     * Click `Dynamic (requires BGP)` for Routing options
     * Click `Enable Acceleration`
     * Click `Create transit gateway attachment`
@@ -90,9 +91,9 @@
         Router1Public: 34.232.97.254
         Router2Public: 18.214.111.154
 * Click `Download Configuration`
-![alt text](image-8.png)
+![alt text](Images/image-8.png)
 * Change vendor to `Generic`
-![alt text](image-9.png)
+![alt text](Images/image-9.png)
 * Click `Download`
 * Rename this file to `CONNECTION1CONFIG.TXT`
 * Repeat the process for connection 2. Select the line which matches **Router2PubIP**
@@ -146,7 +147,7 @@ Go ahead and populate that template using the instructions in the template
         
         ctrl+o to save, and ctrl+x to exit
 
-    ![alt text](image-10.png)
+    ![alt text](Images/image-10.png)
 
 ----
 
@@ -166,7 +167,7 @@ Go ahead and populate that template using the instructions in the template
         
         Ctrl+o to save, and Ctrl+x to exit
    
- ![alt text](image-11.png)
+ ![alt text](Images/image-11.png)
 
 ----
 
@@ -193,16 +194,16 @@ Go ahead and populate that template using the instructions in the template
 * We can check these tunnels are up by running
 `ifconfig`
 * You should see `vti1` and `vti2` interfaces
-![alt text](image-12.png)
+![alt text](Images/image-12.png)
 * You can also check the connection in the AWS VPC Console ...the tunnels should be down, but IPSEC should be shown as UP after a few minutes.
-![alt text](image-16.png)
+![alt text](Images/image-16.png)
 
 ### 2. CONFIGURE IPSEC TUNNELS FOR ONPREMISES-ROUTER2
 * Move to `EC2 Console`
 * Click `Instances` on the hamburger menu
 * Locate and select `ONPREM-ROUTER2`
 * Right Click, select `Connect`
-![alt text](image-13.png)
+![alt text](Images/image-13.png)
 * Select `Session Manager`
 * Click `Connect`
 * Type the followingn:
@@ -231,7 +232,7 @@ As we are connected to Router 2 - This configures the ones for ROUTER2 -> BOTH A
 
     ctrl+o to save and ctrl+x to exit
     ```
-![alt text](image-14.png)
+![alt text](Images/image-14.png)
 ----
 * Type `nano ipsec.secrets`
 
@@ -272,7 +273,7 @@ systemctl restart strongswan to restart strongSwan ... this should bring up the 
 We can check these tunnels are up by running
 ifconfig
 You should see `vti1` and `vti2` interfaces
-![alt text](image-15.png)
+![alt text](Images/image-15.png)
 
 You can also check the connection in the AWS VPC Console ...the tunnels should be down, but IPSEC should be shown as UP after a few minutes.
 
@@ -336,10 +337,10 @@ Type the following
     sudo reboot
 
 ONPREM-ROUTER1 once back will now be functioning as both an IPSEC endpoint and a BGP endpoint. It will be exchanging routes with the transit gateway in AWS.
-![alt text](image-17.png)
-![alt text](image-18.png)
+![alt text](Images/image-17.png)
+![alt text](Images/image-18.png)
 
-![alt text](image-19.png)
+![alt text](Images/image-19.png)
 
 Locate and select ONPREM-ROUTER1
 Right Click => Connect
@@ -350,7 +351,7 @@ sudo bash
 SHOW THE ROUTES VIA THE UI route
 SHOW THE ROUTES VIA vtysh
 show ip route.
-![alt text](image-20.png)
+![alt text](Images/image-20.png)
 
 ### 4. TEST
 #### 1. Move to EC2 Console
@@ -379,7 +380,7 @@ https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=insta
 * Select each VPN
 * Click `Actions`
 * Select `Delete VPN connection`
-![alt text](image-21.png)
+![alt text](Images/image-21.png)
 * confirm deletion 
 
 </br>
@@ -388,7 +389,7 @@ https://console.aws.amazon.com/ec2/v2/home?region=us-east-1#Instances:sort=insta
 * Select each gateway
 * Click `Actions`
 * Select `Delete customer gateway`
-![alt text](image-22.png)
+![alt text](Images/image-22.png)
 * Confirm deletion
 
 
